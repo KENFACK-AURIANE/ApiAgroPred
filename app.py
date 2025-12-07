@@ -46,7 +46,7 @@ def preprocess_new_data(data_dict):
     # 2a. Convertir les booléens/int si nécessaire (s'assurer qu'ils sont traités comme des catégories si c'est le cas)
     for col in bools_cols:
         if col in df_new.columns:
-            df_new[col] = df_new[col].astype(str) # Important : traiter comme chaîne pour l'encodage OHE
+            df_new[col] = df_new[col].astype(int) # Important : traiter comme chaîne pour l'encodage OHE
 
     # 2b. S'assurer que les autres colonnes catégorielles sont des chaînes
     for col in ['Region', 'Soil_Type','Crop', 'Weather_Condition']:
