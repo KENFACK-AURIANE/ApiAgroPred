@@ -3,6 +3,7 @@ import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS # Importé pour permettre l'accès depuis un site web
 import os
+from sklearn.preprocessing import OneHotEncoder
 # j'ai modifie App.py en app.py
 # --- 1. Initialisation de l'application Flask ---
 app = Flask(__name__)
@@ -57,7 +58,7 @@ def preprocess_new_data(data_dict):
 
     # Combine les colonnes numériques et encodées pour former l'input final pour le modèle
     # reset_index(drop=True) est utilisé pour s'assurer que les index correspondent avant la concaténation
-    final_X = pd.concat([df_new.drop(categorical_cols).reset_index(drop=True), encoded_df], axis=1)
+    final_X = pd.concat([df_new.drop(categorical_cols).reset_index(drop=True), encoded_df_new], axis=1)
 
     return final_X
 
