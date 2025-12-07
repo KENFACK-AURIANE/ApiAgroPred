@@ -38,15 +38,22 @@ def preprocess_new_data(data_dict):
         if col in df_new.columns:
             df_new[col] = df_new[col].astype(int)
     # 2b. Colonnes catégorielles et numériques
-    categorical_cols = ['Region', 'Soil_Type', 'Crop',   'Weather_Condition']
-    # numerical_cols = ['Rainfall_mm', 'Temperature_Celsius', 'Days_to_Harvest']
+    categorical_cols = ['Region', 'Soil_Type','Crop', 'Fertilizer_Used', 'Irrigation_Used', 'Weather_Condition']
+    # On s'assure que toutes ces colonnes existent bien
+    categorical_cols = [col for col in categorical_cols if col in df_new.columns]
 
-    # Applique l'encodeur OneHotEncoder sauvegardé
-    # L'utilisation de .transform() garantit que l'ordre des colonnes et les catégories sont les mêmes que lors du .fit()
-    encoded_data = encoder.transform(df_new[categorical_cols])
+    # On remplace les valeurs manquantes par 'Unknown' pour éviter les erreurs d'encodage
+    #df_new[categorical_cols] = df_new[categorical_cols].fillna('Unknown')
 
-    # Crée un DataFrame à partir des données encodées avec les bons noms de colonnes
-    encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(categorical_cols))
+    # Encodage one-hot
+    encoder = OneHotEncoder(sparse_output=False)
+    encoded_data = encoder.fit_transform(df_new[categorical_cols])
+
+    # Création d'un DataFrame encodé
+    encoded_df_new = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(categorical_cols), index=df_new.index)
+
+    # Fusion avec le DataFrame d'origine
+    df_new = pd.concat([df_new.drop(categorical_cols, axis=1), encoded_df_new], axis=1)
 
     # Combine les colonnes numériques et encodées pour former l'input final pour le modèle
     # reset_index(drop=True) est utilisé pour s'assurer que les index correspondent avant la concaténation
