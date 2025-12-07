@@ -3,7 +3,7 @@ import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS # Importé pour permettre l'accès depuis un site web
 import os
-
+# j'ai modifie App.py en app.py
 # --- 1. Initialisation de l'application Flask ---
 app = Flask(__name__)
 CORS(app) # Active le partage de ressources entre origines différentes (essentiel pour un site web externe)
